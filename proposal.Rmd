@@ -1,0 +1,336 @@
+---
+title: "proposal"
+author: "Kyle Schallau"
+date: "10/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For my project, I will be using a dataset that I have acquired from the IPCC. The dataset contains the recorded observations from the IPCC 2006 greenhouse gas production report. It wasn't easy to locate the dataset on the site because I had to click on a link after reading an article from the site. The link is https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?root=. I will be working alone on this project.
+
+The project's goal will be to find mitigation strategies for countries that produce large amounts of greenhouse gases and reduce specific sources from which each gas is coming. I will focus on the five core areas from the IPCC 2006 Report and find different solutions for each. I will be trying to solve five main questions, although I will most likely need to find different questions the further I dive into the project due to difficulties arising in the dataset. My five questions are listed below.
+
+1) My first question will be somewhat easy. The main goal will be to determine what countries and sectors produce the most greenhouse gases from each of the five main categories, and I will try to focus on finding ways to reduce them, given the data provided in the dataset.
+
+2) My second question will address the need for mitigation strategies for the countries and sectors with the largest greenhouse gases. The first mitigation focus will be on finding which fuel leads to the highest amount of greenhouse gases. If countries are using different fuels and producing fewer greenhouse gases, what are those fuels?
+
+3) My third question will be to figure out which abatements/control technologies are being used by countries producing fewer greenhouse gases in certain countries and if mitigation strategies should be used in a country or sector producing more greenhouse gases.
+
+4) My fourth question will try to answer if a certain type of technology/practice being used is helping prevent large amounts of greenhouse gases without any preventive technologies being used.
+
+5) My fifth question will be an overall strategy for reducing greenhouse gases based on the previous questions. Which countries and sectors should use which control technologies and follow which practices to reduce the number of greenhouse gases.
+
+6) Bonus question: One fun question that I would like to address is which animal produces the largest amount of greenhouse gas and should that animal continue to be used in production. If the animal should continue to be used in production, what control technologies and practices can help reduce greenhouse gases.
+
+The below information shows the structure for the IPCC 2006 Source/Sink Categories
+1 - Energy
+    1.A - Fuel Combustion Activities
+          1.A.1 - Energy Industries
+                  1.A.1.a - Main Activity Electricity and Heat Production
+                            1.A.1.a.i - Electricity Generation
+                            1.A.1.a.ii - Combined Heat and Power Generation (CHP)
+                            1.A.1.a.iii - Heat Plants
+                  1.A.1.b - Petroleum Refining
+                  1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries
+                            1.A.1.c.i - Manufacture of Solid Fuels
+                            1.A.1.c.ii - Other Energy Industries
+          1.A.2 - Manufacturing Industries and Construction
+                  1.A.2.a - Iron and Steel
+                  1.A.2.b - Non-Ferrous Metals
+                  1.A.2.c - Chemicals
+                  1.A.2.d - Pulp, Paper and Print
+                  1.A.2.e - Food Processing, Beverages and Tobacco
+                  1.A.2.f - Non-Metallic Minerals
+                  1.A.2.g - Transport Equipment
+                  1.A.2.h - Machinery
+                  1.A.2.i - Mining (excluding fuels) and Quarrying
+                  1.A.2.j - Wood and wood products
+                  1.A.2.k - Construction
+                  1.A.2.l - Textile and Leather
+                  1.A.2.m - Non-specified Industry
+          1.A.3 - Transport
+                  1.A.3.a - Civil Aviation
+                            1.A.3.a.i - International Aviation (International Bunkers)
+                            1.A.3.a.ii - Domestic Aviation
+                  1.A.3.b - Road Transportation
+                            1.A.3.b.i - Cars
+                                        1.A.3.b.i.1 - Passenger cars with 3-way catalysts
+                                        1.A.3.b.i.2 - Passenger cars without 3-way catalysts
+                            1.A.3.b.ii - Light-duty trucks
+                                        1.A.3.b.ii.1 - Light-duty trucks with 3-way catalysts
+                                        1.A.3.b.ii.2 - Light-duty trucks without 3-way catalysts
+                            1.A.3.b.iii - Heavy-duty trucks and buses
+                            1.A.3.b.iv - Motorcycles
+                            1.A.3.b.v - Evaporative emissions from vehicles
+                            1.A.3.b.vi - Urea-based catalysts
+                1.A.3.c - Railways
+                1.A.3.d - Water-borne Navigation
+                          1.A.3.d.i - International water-borne navigation (International bunkers)
+                          1.A.3.d.ii - Domestic Water-borne Navigation
+                1.A.3.e - Other Transportation
+                          1.A.3.e.i - Pipeline Transport
+                          1.A.3.e.ii - Off-road
+          1.A.4 - Other Sectors
+                  1.A.4.a - Commercial/Institutional
+                  1.A.4.b - Residential
+                  1.A.4.c - Agriculture/Forestry/Fishing/Fish Farms
+                            1.A.4.c.i - Stationary
+                            1.A.4.c.ii - Off-road Vehicles and Other Machinery
+                            1.A.4.c.iii - Fishing (mobile combustion)
+          1.A.5 - Non-Specified
+                  1.A.5.a - Stationary
+                  1.A.5.b - Mobile
+                            1.A.5.b.i - Mobile (aviation component)
+                            1.A.5.b.ii - Mobile (water-borne component)
+                            1.A.5.b.iii - Mobile (Other)
+                  1.A.5.c - Multilateral Operations
+    1.B - Fugitive emissions from fuels
+          1.B.1 - Solid Fuels
+                  1.B.1.a - Coal mining and handling
+                            1.B.1.a.i - Underground mines
+                                        1.B.1.a.i.1 - Mining
+                                        1.B.1.a.i.2 - Post-mining seam gas emissions
+                                        1.B.1.a.i.3 - Abandoned underground mines
+                                        1.B.1.a.i.4 - Flaring of drained methane or conversion of methane to CO2
+                            1.B.1.a.ii - Surface mines
+                                         1.B.1.a.ii.1 - Mining 
+                                         1.B.1.a.ii.2 - Post-mining seam gas emissions
+                  1.B.1.b - Uncontrolled combustion and burning coal dumps
+                  1.B.1.c - Solid fuel transformation
+          1.B.2 - Oil and Natural Gas
+                  1.B.2.a - Oil
+                            1.B.2.a.i - Venting
+                            1.B.2.a.ii - Flaring
+                            1.B.2.a.iii - All Other
+                                          1.B.2.a.iii.1 - Exploration
+                                          1.B.2.a.iii.2 - Production and Upgrading
+                                          1.B.2.a.iii.3 - Transport
+                                          1.B.2.a.iii.4 - Refining
+                                          1.B.2.a.iii.5 - Distribution of oil products
+                                          1.B.2.a.iii.6 - Other
+                  1.B.2.b - Natural Gas
+                            1.B.2.b.i - Venting
+                            1.B.2.b.ii - Flaring
+                            1.B.2.b.iii - All Other
+                                          1.B.2.b.iii.1 - Exploration
+                                          1.B.2.b.iii.2 - Production
+                                          1.B.2.b.iii.3 - Processing
+                                          1.B.2.b.iii.4 - Transmission and Storage
+                                          1.B.2.b.iii.5 - Distribution
+                                          1.B.2.b.iii.6 - Other
+          1.B.3 - Other emissions from Energy Production
+    1.C - Carbon dioxide Transport and Storage
+          1.C.1 - Transport of CO2
+                  1.C.1.a - Pipelines
+                  1.C.1.b - Ships
+                  1.C.1.c - Other (please specify)
+          1.C.2 - Injection and Storage
+                  1.C.2.a - Injection
+                  1.C.2.b - Storage
+          1.C.3 - Other
+2 - Industrial Processes and Product Use
+    2.A - Mineral Industry
+          2.A.1 - Cement production
+          2.A.2 - Lime production
+          2.A.3 - Glass Production
+          2.A.4 - Other Process Uses of Carbonates
+                  2.A.4.a - Ceramics
+                  2.A.4.b - Other Uses of Soda Ash
+                  2.A.4.c - Non Metallurgical Magnesia Production
+                  2.A.4.d - Other (please specify)
+          2.A.5 - Other (please specify)
+    2.B - Chemical Industry
+          2.B.1 - Ammonia Production
+          2.B.2 - Nitric Acid Production
+          2.B.3 - Adipic Acid Production
+          2.B.4 - Caprolactam, Glyoxal and Glyoxylic Acid Production
+          2.B.5 - Carbide Production
+          2.B.6 - Titanium Dioxide Production
+          2.B.7 - Soda Ash Production
+          2.B.8 - Petrochemical and Carbon Black Production
+                  2.B.8.a - Methanol
+                  2.B.8.b - Ethylene
+                  2.B.8.c - Ethylene Dichloride and Vinyl Chloride Monomer
+                  2.B.8.d - Ethylene Oxide
+                  2.B.8.e - Acrylonitrile
+                  2.B.8.f - Carbon Black
+          2.B.9 - Fluorochemical Production
+                  2.B.9.a - By-product emissions
+                  2.B.9.b - Fugitive Emissions
+          2.B.10 - Other (Please specify)
+    2.C - Metal Industry
+          2.C.1 - Iron and Steel Production
+          2.C.2 - Ferroalloys Production
+          2.C.3 - Aluminium production
+          2.C.4 - Magnesium production
+          2.C.5 - Lead Production
+          2.C.6 - Zinc Production
+          2.C.7 - Other (please specify)
+    2.D - Non-Energy Products from Fuels and Solvent Use
+          2.D.1 - Lubricant Use
+          2.D.2 - Paraffin Wax Use
+          2.D.3 - Solvent Use
+          2.D.4 - Other (please specify)
+    2.E - Electronics Industry
+          2.E.1 - Integrated Circuit or Semiconductor
+          2.E.2 - TFT Flat Panel Display
+          2.E.3 - Photovoltaics
+          2.E.4 - Heat Transfer Fluid
+          2.E.5 - Other (please specify)
+    2.F - Product Uses as Substitutes for Ozone Depleting Substances
+          2.F.1 - Refrigeration and Air Conditioning
+                  2.F.1.a - Refrigeration and Stationary Air Conditioning
+                  2.F.1.b - Mobile Air Conditioning
+          2.F.2 - Foam Blowing Agents
+          2.F.3 - Fire Protection
+          2.F.4 - Aerosols
+          2.F.5 - Solvents
+          2.F.6 - Other Applications (please specify)
+    2.G - Other Product Manufacture and Use
+          2.G.1 - Electrical Equipment
+                  2.G.1.a - Manufacture of Electrical Equipment
+                  2.G.1.b - Use of Electrical Equipment
+                  2.G.1.c - Disposal of Electrical Equipment
+          2.G.2 - SF6 and PFCs from Other Product Uses
+                  2.G.2.a - Military Applications
+                  2.G.2.b - Accelerators
+                  2.G.2.c - Other (please specify)
+          2.G.3 - N2O from Product Uses
+                  2.G.3.a - Medical Applications
+                  2.G.3.b - Propellant for pressure and aerosol products
+                  2.G.3.c - Other (Please specify)
+          2.G.4 - Other (Please specify)
+    2.H - Other
+          2.H.1 - Pulp and Paper Industry
+          2.H.2 - Food and Beverages Industry
+          2.H.3 - Other (please specify)
+3 - Agriculture, Forestry, and Other Land Use
+    3.A - Livestock
+          3.A.1 - Enteric Fermentation
+                  3.A.1.a - Cattle
+                            3.A.1.a.i - Dairy Cows
+                            3.A.1.a.ii - Other Cattle
+                  3.A.1.b - Buffalo
+                  3.A.1.c - Sheep
+                  3.A.1.d - Goats
+                  3.A.1.e - Camels
+                  3.A.1.f - Horses
+                  3.A.1.g - Mules and Asses
+                  3.A.1.h - Swine
+                  3.A.1.j - Other (please specify)
+          3.A.2 - Manure Management
+                  3.A.2.a - Cattle
+                            3.A.2.a.i - Dairy cows
+                            3.A.2.a.ii - Other cattle
+                  3.A.2.b - Buffalo
+                  3.A.2.c - Sheep
+                  3.A.2.d - Goats
+                  3.A.2.e - Camels
+                  3.A.2.f - Horses
+                  3.A.2.g - Mules and Asses
+                  3.A.2.h - Swine
+                  3.A.2.i - Poultry
+                  3.A.2.j - Other (please specify)
+    3.B - Land
+          3.B.1 - Forest land
+                  3.B.1.a - Forest land Remaining Forest land
+                  3.B.1.b - Land Converted to Forest land
+                            3.B.1.b.i - Cropland converted to Forest Land
+                            3.B.1.b.ii - Grassland converted to Forest Land
+                            3.B.1.b.iii - Wetlands converted to Forest Land
+                            3.B.1.b.iv - Settlements converted to Forest Land
+                            3.B.1.b.v - Other Land converted to Forest Land
+          3.B.2 - Cropland
+                  3.B.2.a - Cropland Remaining Cropland
+                  3.B.2.b - Land Converted to Cropland
+                            3.B.2.b.i - Forest Land converted to Cropland
+                            3.B.2.b.ii - Grassland converted to Cropland
+                            3.B.2.b.iii - Wetlands converted to Cropland
+                            3.B.2.b.iv - Settlements converted to Cropland
+                            3.B.2.b.v - Other Land converted to Cropland
+                  3.B.3 - Grassland
+                          3.B.3.a - Grassland Remaining Grassland
+                          3.B.3.b - Land Converted to Grassland
+                                    3.B.3.b.i - Forest Land converted to Grassland
+                                    3.B.3.b.ii - Cropland converted to Grassland
+                                    3.B.3.b.iii - Wetlands converted to Grassland
+                                    3.B.3.b.iv - Settlements converted to Grassland
+                                    3.B.3.b.v - Other Land converted to Grassland
+                  3.B.4 - Wetlands
+                          3.B.4.a - Wetlands Remaining Wetlands
+                                    3.B.4.a.i - Peat Extraction remaining Peat Extraction
+                                    3.B.4.a.ii - Flooded land remaining flooded land
+                                    3.B.4.a.iii - Other Wetlands Remaining Other Wetlands
+                          3.B.4.b - Land Converted to Wetlands
+                                    3.B.4.b.i - Land converted for peat extraction
+                                    3.B.4.b.ii - Land converted to flooded land
+                                    3.B.4.b.iii - Land converted to other wetlands
+                  3.B.5 - Settlements
+                          3.B.5.a - Settlements Remaining Settlements
+                          3.B.5.b - Land Converted to Settlements
+                                    3.B.5.b.i - Forest Land converted to Settlements
+                                    3.B.5.b.ii - Cropland converted to Settlements
+                                    3.B.5.b.iii - Grassland converted to Settlements
+                                    3.B.5.b.iv - Wetlands converted to Settlements
+                                    3.B.5.b.v - Other Land converted to Settlements
+                  3.B.6 - Other Land
+                          3.B.6.a - Other land Remaining Other land
+                          3.B.6.b - Land Converted to Other land
+                                    3.B.6.b.i - Forest Land converted to Other Land
+                                    3.B.6.b.ii - Cropland converted to Other Land
+                                    3.B.6.b.iii - Grassland converted to Other Land
+                                    3.B.6.b.iv - Wetlands converted to Other Land
+                                    3.B.6.b.v - Settlements converted to Other Land
+    3.C - Aggregate sources and non-CO2 emissions sources on land
+          3.C.1 - Burning
+                  3.C.1.a - Burning in Forest Land
+                  3.C.1.b - Burning in Cropland
+                  3.C.1.c - Burning in Grassland
+                  3.C.1.d - Burning in All Other Land
+          3.C.2 - Liming
+          3.C.3 - Urea application
+          3.C.4 - Direct N2O Emissions from managed soils
+          3.C.5 - Indirect N2O Emissions from managed soils
+          3.C.6 - Indirect N2O Emissions from manure management
+          3.C.7 - Rice cultivations
+          3.C.8 - CH4 from Drained Organic Soils
+          3.C.9 - CH4 from Drainage Ditches on Organic Soils
+          3.C.10 - CH4 from Rewetting of Organic Soils
+          3.C.11 - CH4 Emissions from Rewetting of Mangroves and Tidal Marshes
+          3.C.12 - N2O Emissions from Aquaculture
+          3.C.13 - CH4 Emissions from Rewetted and Created Wetlands on Inland Wetland Mineral Soils
+          3.C.14 - Other (please specify)
+    3.D - Other
+          3.D.1 - Harvested Wood Products
+          3.D.2 - Other (please specify)
+4 - Waste
+    4.A - Solid Waste Disposal
+          4.A.1 - Managed Waste Disposal Sites
+          4.A.2 - Unmanaged Waste Disposal Sites
+          4.A.3 - Uncategorised Waste Disposal Sites
+    4.B - Biological Treatment of Solid Waste
+    4.C - Incineration and Open Burning of Waste
+          4.C.1 - Waste Incineration
+          4.C.2 - Open Burning of Waste
+    4.D - Wastewater Treatment and Discharge
+          4.D.1 - Domestic Wastewaster Treatment and Discharge
+          4.D.2 - Industrial Wastewater Treatment and Discharge
+    4.E - Other (please specify)
+5 - Other
+    5.A - Indirect N2O emissions from the atmospheric deposition of nitrogen in NOx and NH3
+    5.B - Other (please specify)
+    
+```{r}
+library(dplyr)
+library(tidyverse)
+
+library(readxl)
+
+my_data <- read_excel("all.xlsx", col_types = c("text", "text", "text", "text", "text", "text", "text", "text", "text", "guess", "text"))
+
+str(my_data)
+```
+The dataset that I will be using contains 11 columns and 40,608 rows that are all currently character values with a trailing space. I have removed some columns due to lack of importance in my project. The categories included in dataset are listed above. The first category, IPCC 2006 Source/Sink Category, is the greenhouse source taken directly from the 2006 IPCC and is listed from lines 29 to 324 of this document. The second category, Gas, is the gas or greenhouse gas being produced. The third category, Fuel 2006, is the Fuel source being used in that observation. The fourth category, Description, describes the description of the observation recorded. The fifth category, Technologies / Practices, describes the technologies/practices being used when the observation was recorded. The sixth column, Parameters / Conditions, describes the conditions of the observation, factors that are influencing or hindering greenhouse gas emissions. The seventh column, Region / Regional Conditions, is the country or the group of countries recorded in the observation. The eighth column, Abatement / Control Technologies, describes the technologies currently being used in reducing/limiting greenhouse gases. The ninth column, Other Properties, describes properties included in the IPCC 2006 Source/Sink Category. For example, an IPCC 2006 Source/Sink Category would have chickens, turkeys, and ducks listed under the other properties. The tenth column, Value, is the number of greenhouse gases produced. The eleventh column, Unit, is the measurement used when recording the Value of greenhouse gases. There are numerical values in the dataset, so I will need to convert the columns into numerical values. There are also quite a few NA values in the dataset. I plan on leaving NA values alone since the NA means that no information is provided for that particular observation.
