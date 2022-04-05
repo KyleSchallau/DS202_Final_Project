@@ -1,0 +1,210 @@
+---
+title: "Kyle_Schallau_Project_Report"
+author: "Kyle Schallau"
+date: "12/13/2021"
+output: html_document
+---
+
+Description of background and questions raised
+The pipeline for obtaining and cleaning the dataset
+The exploratory analysis with a few featured infographics
+Steps for data wrangling and visualization
+Answers to the questions raised
+Conclusion
+
+
+
+## Greenhouse Gas Emissions
+
+The IPCC, Intergovernmental Panel on Climate Change, researches and conducts studies on factors influencing climate change. A lot of the research conducted comes from research on greenhouse gas emissions and is what this project is over. The dataset is mainly about methane, a greenhouse gas emission that is created through biogas generation.
+
+The questions that I want answered are vital in finding ways to reduce the amount of greenhouse gas emissions from methane. The first step in determining the generation of methane is to figure out the amount of waste generated. How much waste does each country produce is my first question that I am going to wrangle. Once the amount of waste generation is determined, the next step is to determine what types of waste countries are producing. What are the main types of waste produced is my second question. Once the waste items are determined, the next step is to figure out how much of the waste causes greenhouse gases and this will be my third question. After determining how much methane greenhouse gas is produced, the next step is to determine how long it will take for the waste to decompose and the full extent of the gas to be released, which will be my final question. By knowing the amount of time it takes the waste to decompose and the amount of greenhouse gases to be produced, appropriate mitigation strategies can be achieved.
+
+The dataset was obtained from the IPCC website. The data had to downloaded and extracted into readable r code show below.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(stringr)
+library(readxl)
+
+my_data <- read_excel("wastes.xlsx", col_types = c("text", "text", "text", "text", "text", "text", "text", "text", "text", "guess"))
+
+str(my_data)
+```
+
+Once the data was able to be read by r, I had to clean the data by removing trailing spaces after almost every cell. The dataset was 4,289 rows long and 10 columns wide.
+```{r}
+#Remove all trailing spaces from the dataset
+my_data$Description <- substr(my_data$Description, 1, nchar(my_data$Description) - 1)
+my_data$Practices <- substr(my_data$Practices, 1, nchar(my_data$Practices) - 1)
+my_data$Parameters <- substr(my_data$Parameters, 1, nchar(my_data$Parameters) - 1)
+my_data$Region <- substr(my_data$Region, 1, nchar(my_data$Region) - 1)
+my_data$Abatement <- substr(my_data$Abatement, 1, nchar(my_data$Abatement) - 1)
+my_data$Other_properties <- substr(my_data$Other_properties, 1, nchar(my_data$Other_properties) - 1)
+my_data$Value <- substr(my_data$Value, 1, nchar(my_data$Value) - 1)
+my_data$Unit <- substr(my_data$Unit, 1, nchar(my_data$Unit) - 1)
+```
+
+After I removed all trailing spaces, I was able to further clean the data. I renamed United States of America to United States to limit use of words. I also changed United Kingdom of Great Britain and Northern Ireland to Great Britain and Northern Ireland.
+```{r}
+#Change all occurrences of United States of America to United States
+my_data$Region <- gsub("United States of America", "United States", my_data$Region)
+
+#Change all occurances of United Kingdom of Great Britain and Northern Ireland to Great Britain and Northern Ireland
+my_data$Region <- gsub("United Kingdom of Great Britain and Northern Ireland", "Great Britain and Northern Ireland", my_data$Region)
+
+```
+
+Once I finished changing the names, I now removed all na values from the sink category and the description category, since I was narrowing my search based on these two columns and did not want rows I could not use.
+```{r}
+#Remove all na values in Sink_Category
+my_data <- my_data %>% drop_na(Sink_Category)
+
+#Remove all na values in Description
+my_data <- my_data %>% drop_na(Description)
+
+```
+
+Once the NA rows were removed, I began narrowing down my search. I first filtered based on the the subcategory "4.A - Solid Waste Disposal", which is within the waste category. Filtering based on solid waste disposal will allow me to see results for only the solid waste disposed.
+```{r}
+#Filter Based on 4.A
+my_data_4A <- my_data %>%
+  filter(Sink_Category == "4.A - Solid Waste Disposal")
+```
+
+For my first question I began by selecting all MSW disposal and generation rate rows based on target names.
+```{r}
+#Select all MSW disposal and generation rate rows based on target names
+target <- c("Municipal Solid Waste (MSW) disposal rate","Municipal Solid Waste (MSW) Generation Rate")
+my_data_msw_rate <- my_data_4A[my_data_4A$Description %in% target,]
+```
+
+I then changed my data to value column to a double.
+```{r}
+#Change Value to Double
+my_data_msw_rate$Value <- parse_double(my_data_msw_rate$Value)
+```
+
+I then needed to remove some rows because they were missing key information needed to make the results meaningful.
+```{r}
+#Removed certain cells
+my_data_msw_rate <- my_data_msw_rate[-c(53),]
+my_data_msw_rate <- my_data_msw_rate[-c(54),]
+my_data_msw_rate <- my_data_msw_rate[-c(50),] 
+my_data_msw_rate <- my_data_msw_rate[-c(53),]
+my_data_msw_rate <- my_data_msw_rate[-c(51),]
+my_data_msw_rate <- my_data_msw_rate[-c(50),]
+my_data_msw_rate <- my_data_msw_rate[-c(51),]
+my_data_msw_rate <- my_data_msw_rate[-c(50),]
+my_data_msw_rate <- my_data_msw_rate[-c(46),]
+my_data_msw_rate <- my_data_msw_rate[-c(49),]
+my_data_msw_rate <- my_data_msw_rate[-c(56),]
+my_data_msw_rate <- my_data_msw_rate[-c(57),]
+my_data_msw_rate <- my_data_msw_rate[-c(46),]
+my_data_msw_rate <- my_data_msw_rate[-c(58),]
+
+
+view(my_data_msw_rate)
+```
+
+Plotted the data.
+```{r}
+ggplot(data =my_data_msw_rate, aes(x=Region, y=Value, fill=Description)) +
+  geom_bar(stat="identity", position = position_dodge()) + theme(axis.text.x = element_text(angle = 90)) + 
+  ggtitle("Methane Municipal Solid Waste (MSW) Disposal and Generation Rate") + xlab("Country") + ylab("kg/cap/day")
+```
+
+Based on the above graph, you can see that India has the lowest MSW disposal rate per person, while Germany has the highest. India also has the lowest MSW generation rate per person, while the United States has the highest.
+
+For my second question, I narrowed down the search based on a target result of DOC content of each MSW component.
+```{r}
+#DOC Content of each MSW component
+target <- c("Degradable organic carbon (DOC) content of each MSW component in % of wet waste","Degradable organic carbon (DOC) content of each MSW component in % of dry waste")
+my_data_doc_content <- my_data_4A[my_data_4A$Description %in% target,]
+```
+
+I then turned the value column into a double to make the data meaninful.
+```{r}
+#Change Value to Double
+my_data_doc_content$Value <- parse_double(my_data_doc_content$Value)
+```
+
+I finally plotted my data.
+```{r}
+#plot the data
+ggplot(data =my_data_doc_content, aes(x=Practices, y=Value, fill=Parameters)) +
+  geom_bar(stat="identity", position = position_dodge()) + theme(axis.text.x = element_text(angle = 90)) + 
+  ggtitle("DOC Content of Each MSW Component") + xlab("MSW Component") + ylab("% DOC Content")
+```
+
+Based on the above graph, nappies, diapers, have the highest DOC content of each MSW component. DOC is degreadable organic carbon and is the ability to be converted into biogas, such as methane. This means that about 60% of diapers are able to turned into methane and other greenhouse gases. Textiles, has the lowest conversion. In conclusion, we need to find a way to reduce the amount of diapers used.
+
+For my second question, I needed to do some cleaning and wrangling. The first thing I did was narrowed down my search by "k (methane generation rate)". The methane (CH4) generation rate constant (k value, yr(-1)) is an essential parameter when using first-order decay (FOD) landfill gas (LFG) generation models to estimate CH4 generation from landfills.
+```{r}
+#Filter data
+my_data_4A_k_methane_generation_rate <- my_data_4A %>%
+  filter(Description == "k (methane generation rate)")
+```
+
+Once I had filtered my data I needed to again covert the value column into a double to be able to read the data.
+```{r}
+#Change Value to double
+my_data_4A_k_methane_generation_rate$Value <- parse_double(my_data_4A_k_methane_generation_rate$Value)
+```
+
+I then renamed a couple cells to make the data easier to read.
+```{r}
+#Rename certain cells
+my_data_4A_k_methane_generation_rate$Parameters[3] <- 'garden and park waste'
+my_data_4A_k_methane_generation_rate$Parameters[8] <- 'garden and park waste'
+my_data_4A_k_methane_generation_rate$Parameters[13] <- 'garden and park waste'
+my_data_4A_k_methane_generation_rate$Parameters[18] <- 'garden and park waste'
+```
+
+With my data wrangled I am ready to plot my graph.
+```{r}
+#Plot the data
+ggplot(data = my_data_4A_k_methane_generation_rate, aes(x=Parameters, y=Value, fill=Region)) +
+  geom_bar(stat="identity", position = position_dodge()) + theme(axis.text.x = element_text(angle = 90)) + 
+  ggtitle("k (methane generation rate) of Waste Products") + xlab("Waste Products") + ylab("1/year")
+```
+
+Based on the graph above wet tropical regions have the largest amount of methane generation. Dry boreal and temperate zones have the lowest amount of methane generation rate. Wood/straw waste has the overall lowest methane generation rate of all products, while food waste/ sewage sludge has the highest overall methane generation rate. Based on the previous graph and this graph, we can find the amount of methane generated by taking the methane generation rate of each waste product in each region and computing it times the half-life of the same region. 
+
+For my final question, I filtered based on "Half-Life (t1/2)", so I could find the amount of time it takes for half of solid waste disposed to decay and release greenhouse gases.
+```{r}
+#Filter based on Half-Life (t1/2)
+my_data_4A_half_life <- my_data_4A %>%
+  filter(Description == "Half-Life (t1/2)")
+```
+
+Once I had my dataframe created, I needed to change my value column into doubles, so they can be read properly.
+```{r}
+#Change Value to double
+my_data_4A_half_life$Value <- parse_double(my_data_4A_half_life$Value)
+```
+
+I also renamed a couple of the cells, so I could read the data easier.
+```{r}
+#Rename certain cells
+my_data_4A_half_life$Parameters[3] <- 'garden and park waste'
+my_data_4A_half_life$Parameters[8] <- 'garden and park waste'
+my_data_4A_half_life$Parameters[13] <- 'garden and park waste'
+my_data_4A_half_life$Parameters[18] <- 'garden and park waste'
+```
+
+The data is now ready to be plotted.
+```{r}
+#Plot the data
+ggplot(data = my_data_4A_half_life, aes(x=Parameters, y=Value, fill=Region)) +
+  geom_bar(stat="identity", position = position_dodge()) + theme(axis.text.x = element_text(angle = 90)) + 
+  ggtitle("Years to Half-Life of Waste Products") + xlab("Waste Products") + ylab("Years")
+```
+
+Based on the above graph, Dry Boreal and Temperate zones had the longest half-lives for waste products. Wet tropical regions contained shortest half-lives for waste products. In addition, wood/straw waste took the longest to decay for any waste product and food waste/ sewage sludge had the overall shortest half-life of any product. In certain regions, food waste/ sewage sluge took longer to decay than other waste products in certain regions.
+
+Overall, by determining the amount of decay per waste product, the amount of greenhouse gases will be able to be calculated.
